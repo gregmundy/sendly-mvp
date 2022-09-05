@@ -1,0 +1,5 @@
+.vscode/
+**/venv
+**/content.html
+**/content.txt
+config.json
