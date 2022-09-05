@@ -14,14 +14,18 @@ app = Flask(__name__)
 api = Api(app)
 config = Config()
 
-if not os.path.exists('config.json'):
+if not os.path.exists("config.json"):
     print("No config.json found.")
     sys.exit(1)
 
-with open('config.json', 'r') as fh:
+with open("config.json", "r") as fh:
     creds = json.load(fh)
 
+
 class InboundMessage(Resource):
+    def get(self):
+        return {"status": "ok"}
+
     def post(self):
         parse = Parse(config, request)
         tags = set(re.findall("#(\w+)", parse.payload["text"]))
@@ -40,7 +44,7 @@ class InboundMessage(Resource):
 
         table = dynamodb.Table("SendlyResources")
         tags_table = dynamodb.Table("SendlyTags")
-        
+
         # Add tags to collection
         for tag in tags:
             tags_table.put_item(Item={"Tag": tag, "CollectionID": uuid})
